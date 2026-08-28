@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 import api from "@/components/lib/api";
 import Topbar from "@/components/lib/admin/Topbar";
 
@@ -16,6 +16,7 @@ type Submission = {
   estimatedCost: number | null;
   requiresManualQuote: boolean;
   status: "new" | "reviewed" | "sent";
+  createdAt: string;
 };
 
 const tabs = [
@@ -30,6 +31,9 @@ const serviceLabels: Record<string, string> = {
   midLevel: "Mid-Level",
   proofreading: "Proofreading",
 };
+
+const formatDate = (value: string) =>
+  new Date(value).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
 
 export default function SubmissionsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -68,6 +72,21 @@ export default function SubmissionsPage() {
       window.URL.revokeObjectURL(url);
     } catch {
       toast.error("Unable to download file");
+    }
+  };
+
+  const deleteSubmission = async (id: string) => {
+    if (!window.confirm("Delete this submission? This cannot be undone.")) return;
+
+    const prev = submissions;
+    setSubmissions((current) => current.filter((s) => s._id !== id));
+
+    try {
+      await api.delete(`/api/submissions/${id}`);
+      toast.success("Submission deleted");
+    } catch {
+      setSubmissions(prev);
+      toast.error("Unable to delete submission");
     }
   };
 
@@ -113,6 +132,7 @@ export default function SubmissionsPage() {
                   <th className="px-4 py-3">Service</th>
                   <th className="px-4 py-3">Words</th>
                   <th className="px-4 py-3">Cost</th>
+                  <th className="px-4 py-3">Submitted</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3"></th>
                 </tr>
@@ -134,6 +154,7 @@ export default function SubmissionsPage() {
                         "—"
                       )}
                     </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-[#1B2430]/60">{formatDate(s.createdAt)}</td>
                     <td className="px-4 py-3">
                       <select
                         value={s.status}
@@ -146,9 +167,14 @@ export default function SubmissionsPage() {
                       </select>
                     </td>
                     <td className="px-4 py-3">
-                      <button onClick={() => downloadFile(s._id, s.originalName)} className="text-[#C77D3D] hover:text-[#1B2430]">
-                        <Download size={16} strokeWidth={1.6} />
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button onClick={() => downloadFile(s._id, s.originalName)} className="text-[#C77D3D] hover:text-[#1B2430]">
+                          <Download size={16} strokeWidth={1.6} />
+                        </button>
+                        <button onClick={() => deleteSubmission(s._id)} className="text-[#1B2430]/40 hover:text-red-600">
+                          <Trash2 size={16} strokeWidth={1.6} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
