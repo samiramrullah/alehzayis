@@ -34,7 +34,13 @@ function PaymentForm({ amount, onSuccess }: { amount: number; onSuccess: () => v
     if (!stripe || !elements) return;
     setPaying(true);
 
-    const { error } = await stripe.confirmPayment({ elements, redirect: "if_required" });
+    const { error } = await stripe.confirmPayment({
+      elements,
+      redirect: "if_required",
+      confirmParams: {
+        return_url: `${window.location.origin}/submit`,
+      },
+    });
 
     if (error) {
       toast.error(error.message || "Payment failed");
@@ -137,7 +143,28 @@ export default function SubmitPage() {
   }, [quote, email]);
 
   const onFiles = (incoming: FileList) => {
-    setFiles((prev) => [...prev, ...Array.from(incoming)]);
+    const accepted: File[] = [];
+    const rejected: string[] = [];
+
+    Array.from(incoming).forEach((file) => {
+      if (file.name.toLowerCase().endsWith(".docx")) {
+        accepted.push(file);
+      } else {
+        rejected.push(file.name);
+      }
+    });
+
+    if (rejected.length > 0) {
+      toast.error(
+        rejected.length === 1
+          ? `"${rejected[0]}" isn't allowed — only .docx files are accepted right now.`
+          : `${rejected.length} files weren't added — only .docx files are accepted right now.`
+      );
+    }
+
+    if (accepted.length === 0) return;
+
+    setFiles((prev) => [...prev, ...accepted]);
     setClientSecret("");
     intentRequestedFor.current = null;
   };
@@ -273,14 +300,14 @@ export default function SubmitPage() {
                   className="flex h-[84px] w-full flex-col items-center justify-center gap-[6px] rounded-[2px] border border-dashed border-[#4A1521]/25 bg-[#FBF7EF] text-[#8B7B7E] transition-colors duration-200 hover:border-[#C59B27] hover:text-[#4A1521]"
                 >
                   <UploadCloud size={20} strokeWidth={1.5} />
-                  <span className="font-body text-[0.8rem]">Click to choose files, or drag them here</span>
+                  <span className="font-body text-[0.8rem]">Click to choose a file — .docx only</span>
                 </button>
 
                 <input
                   ref={fileInputRef}
                   type="file"
                   multiple
-                  accept=".pdf,.docx,.doc,.jpg,.jpeg,.png"
+                  accept=".docx"
                   className="hidden"
                   onChange={(e) => {
                     if (e.target.files && e.target.files.length > 0) onFiles(e.target.files);
