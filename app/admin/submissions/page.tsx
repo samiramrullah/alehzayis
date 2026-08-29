@@ -17,6 +17,7 @@ type Submission = {
   requiresManualQuote: boolean;
   status: "new" | "reviewed" | "sent";
   createdAt: string;
+  projectNumber?: string;
 };
 
 const tabs = [
@@ -75,6 +76,22 @@ export default function SubmissionsPage() {
     }
   };
 
+  const saveProjectNumber = async (id: string, value: string) => {
+    const current = submissions.find((s) => s._id === id);
+    if (!current || (current.projectNumber || "") === value) return;
+
+    const prev = submissions;
+    setSubmissions((curr) => curr.map((s) => (s._id === id ? { ...s, projectNumber: value } : s)));
+
+    try {
+      await api.patch(`/api/submissions/${id}/project-number`, { projectNumber: value });
+      toast.success("Project number saved");
+    } catch {
+      setSubmissions(prev);
+      toast.error("Unable to save project number");
+    }
+  };
+
   const deleteSubmission = async (id: string) => {
     if (!window.confirm("Delete this submission? This cannot be undone.")) return;
 
@@ -127,6 +144,7 @@ export default function SubmissionsPage() {
               <thead className="border-b border-black/5 text-xs uppercase tracking-wide text-[#1B2430]/45">
                 <tr>
                   <th className="px-4 py-3">File</th>
+                  <th className="px-4 py-3">Project #</th>
                   <th className="px-4 py-3">Email</th>
                   <th className="px-4 py-3">Language</th>
                   <th className="px-4 py-3">Service</th>
@@ -141,6 +159,17 @@ export default function SubmissionsPage() {
                 {visible.map((s) => (
                   <tr key={s._id} className="border-b border-black/5 last:border-0">
                     <td className="px-4 py-3 text-[#1B2430]">{s.originalName}</td>
+                    <td className="px-4 py-3">
+                      <input
+                        defaultValue={s.projectNumber || ""}
+                        placeholder="—"
+                        onBlur={(e) => saveProjectNumber(s._id, e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") e.currentTarget.blur();
+                        }}
+                        className="w-24 rounded-lg border border-black/10 bg-transparent px-2 py-1 text-sm text-[#1B2430] outline-none focus:border-[#C77D3D]"
+                      />
+                    </td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{s.email}</td>
                     <td className="px-4 py-3 capitalize text-[#1B2430]/60">{s.language}</td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{serviceLabels[s.service]}</td>
