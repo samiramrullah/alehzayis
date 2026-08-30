@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Trash2, Eye, Check, X } from "lucide-react";
 import api from "@/components/lib/api";
 import Topbar from "@/components/lib/admin/Topbar";
+import Modal from "@/components/lib/admin/Model";
 
 type Submission = {
   _id: string;
   originalName: string;
   email: string;
+  phone?: string;
   language: "english" | "hebrew";
   service: "heavyEditing" | "midLevel" | "proofreading";
   wordCount: number | null;
@@ -18,6 +20,7 @@ type Submission = {
   status: "new" | "reviewed" | "sent";
   createdAt: string;
   projectNumber?: string;
+  editingServices?: string[];
 };
 
 const tabs = [
@@ -33,13 +36,31 @@ const serviceLabels: Record<string, string> = {
   proofreading: "Proofreading",
 };
 
-const formatDate = (value: string) =>
-  new Date(value).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+const editingServices = [
+  { key: "grammar", label: "Grammar, spelling, and punctuation" },
+  { key: "formatting", label: "Consistent headings, spacing, and formatting" },
+  { key: "hebrewTerms", label: "Consistent spelling of Hebrew terms" },
+  { key: "namesTerminology", label: "Consistent use of names and terminology" },
+  { key: "naturalEnglish", label: "Make translated text sound natural in English" },
+  { key: "clarity", label: "Improve unclear, awkward, or difficult-to-read writing" },
+  { key: "organizeIdeas", label: "Organize ideas in a clearer, more logical order" },
+  { key: "reorganizeSections", label: "Reorganize sections and paragraphs" },
+  { key: "removeRepetition", label: "Remove repetition across the document" },
+  { key: "flagGaps", label: "Flag missing explanations and areas that may confuse readers" },
+];
+
+const formatDate = (value: string) => {
+  const d = new Date(value);
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${mm}/${dd}/${d.getFullYear()}`;
+};
 
 export default function SubmissionsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["key"]>("new");
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Submission | null>(null);
 
   useEffect(() => {
     api
@@ -146,6 +167,7 @@ export default function SubmissionsPage() {
                   <th className="px-4 py-3">File</th>
                   <th className="px-4 py-3">Project #</th>
                   <th className="px-4 py-3">Email</th>
+                  <th className="px-4 py-3">Phone</th>
                   <th className="px-4 py-3">Language</th>
                   <th className="px-4 py-3">Service</th>
                   <th className="px-4 py-3">Words</th>
@@ -160,17 +182,20 @@ export default function SubmissionsPage() {
                   <tr key={s._id} className="border-b border-black/5 last:border-0">
                     <td className="px-4 py-3 text-[#1B2430]">{s.originalName}</td>
                     <td className="px-4 py-3">
-                      <input
-                        defaultValue={s.projectNumber || ""}
-                        placeholder="—"
-                        onBlur={(e) => saveProjectNumber(s._id, e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") e.currentTarget.blur();
-                        }}
-                        className="w-24 rounded-lg border border-black/10 bg-transparent px-2 py-1 text-sm text-[#1B2430] outline-none focus:border-[#C77D3D]"
-                      />
+                      <div className="flex items-center rounded-lg border border-black/10 px-2 focus-within:border-[#C77D3D]">
+                        <span className="text-sm text-[#1B2430]/50">AZ-</span>
+                        <input
+                          defaultValue={(s.projectNumber || "").replace(/^AZ-/, "")}
+                          onBlur={(e) => saveProjectNumber(s._id, `AZ-${e.target.value}`)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") e.currentTarget.blur();
+                          }}
+                          className="w-20 bg-transparent py-1 pl-0.5 text-sm text-[#1B2430] outline-none"
+                        />
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{s.email}</td>
+                    <td className="px-4 py-3 text-[#1B2430]/60">{s.phone || "—"}</td>
                     <td className="px-4 py-3 capitalize text-[#1B2430]/60">{s.language}</td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{serviceLabels[s.service]}</td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{s.wordCount ? s.wordCount.toLocaleString() : "—"}</td>
@@ -197,6 +222,9 @@ export default function SubmissionsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
+                        <button onClick={() => setSelected(s)} className="text-[#1B2430]/40 hover:text-[#1B2430]">
+                          <Eye size={16} strokeWidth={1.6} />
+                        </button>
                         <button onClick={() => downloadFile(s._id, s.originalName)} className="text-[#C77D3D] hover:text-[#1B2430]">
                           <Download size={16} strokeWidth={1.6} />
                         </button>
@@ -212,6 +240,76 @@ export default function SubmissionsPage() {
           </div>
         )}
       </div>
+
+      <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.originalName || "Submission"}>
+        {selected && (
+          <div className="space-y-5 text-sm text-[#1B2430]">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+              <div>
+                <div className="text-[#1B2430]/50">Project #</div>
+                <div>{selected.projectNumber || "—"}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Status</div>
+                <div className="capitalize">{selected.status}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Email</div>
+                <div>{selected.email}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Phone</div>
+                <div>{selected.phone || "—"}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Language</div>
+                <div className="capitalize">{selected.language}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Service</div>
+                <div>{serviceLabels[selected.service]}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Words</div>
+                <div>{selected.wordCount ? selected.wordCount.toLocaleString() : "—"}</div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Cost</div>
+                <div>
+                  {selected.requiresManualQuote
+                    ? "Manual quote"
+                    : selected.estimatedCost
+                    ? `$${selected.estimatedCost.toFixed(2)}`
+                    : "—"}
+                </div>
+              </div>
+              <div>
+                <div className="text-[#1B2430]/50">Submitted</div>
+                <div>{formatDate(selected.createdAt)}</div>
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 text-[#1B2430]/50">Editing Services</div>
+              <ul className="space-y-1.5">
+                {editingServices.map((item) => {
+                  const included = !selected.editingServices || selected.editingServices.includes(item.key);
+                  return (
+                    <li key={item.key} className="flex items-center gap-2">
+                      {included ? (
+                        <Check size={14} strokeWidth={2} className="shrink-0 text-green-600" />
+                      ) : (
+                        <X size={14} strokeWidth={2} className="shrink-0 text-red-500" />
+                      )}
+                      <span className={included ? "" : "text-[#1B2430]/40 line-through"}>{item.label}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
+      </Modal>
     </>
   );
 }
