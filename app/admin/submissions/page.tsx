@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download, Trash2, Eye, Check, X } from "lucide-react";
+import { Download, Trash2, Eye, Check, X, Copy } from "lucide-react";
 import api from "@/components/lib/api";
 import Topbar from "@/components/lib/admin/Topbar";
 import Modal from "@/components/lib/admin/Model";
@@ -56,11 +56,39 @@ const formatDate = (value: string) => {
   return `${mm}/${dd}/${d.getFullYear()}`;
 };
 
+const statusStyles: Record<Submission["status"], string> = {
+  new: "bg-blue-50 text-blue-700",
+  reviewed: "bg-amber-50 text-amber-700",
+  sent: "bg-green-50 text-green-700",
+};
+
+const copyToClipboard = async (text: string) => {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  // Fallback for non-secure contexts / older browsers without the Clipboard API.
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+};
+
 export default function SubmissionsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["key"]>("new");
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Submission | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    // Reset the "Copied" state whenever a different submission is opened (or the modal closes).
+    setCopied(false);
+  }, [selected]);
 
   useEffect(() => {
     api
@@ -128,17 +156,37 @@ export default function SubmissionsPage() {
     }
   };
 
+  const copyIncludedServices = async (submission: Submission) => {
+    const included = editingServices.filter(
+      (item) => !submission.editingServices || submission.editingServices.includes(item.key)
+    );
+    if (included.length === 0) return;
+
+    const text = included.map((item) => `• ${item.label}`).join("\n");
+    try {
+      await copyToClipboard(text);
+      setCopied(true);
+      toast.success("Included services copied");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Unable to copy to clipboard");
+    }
+  };
+
   const countFor = (key: (typeof tabs)[number]["key"]) =>
     key === "all" ? submissions.length : submissions.filter((s) => s.status === key).length;
 
   const visible = activeTab === "all" ? submissions : submissions.filter((s) => s.status === activeTab);
 
   return (
-    <>
+    // h-full (not h-screen) because AdminLayout already pins the shell to
+    // the viewport; overflow-hidden + the flex-col below means only the
+    // table body scrolls, while the topbar and tabs stay put.
+    <div className="flex h-full flex-col overflow-hidden">
       <Topbar title="Submissions" />
 
-      <div className="space-y-6 p-8">
-        <div className="flex items-center gap-2 border-b border-black/5">
+      <div className="flex min-h-0 flex-1 flex-col gap-6 p-8">
+        <div className="flex shrink-0 items-center gap-2 border-b border-black/5">
           {tabs.map((tab) => {
             const active = activeTab === tab.key;
             return (
@@ -160,9 +208,13 @@ export default function SubmissionsPage() {
         ) : visible.length === 0 ? (
           <p className="text-sm text-[#1B2430]/55">No submissions here.</p>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-black/5 bg-white">
+          // min-h-0 lets this shrink inside the flex parent instead of
+          // forcing the page to grow; overflow-auto scrolls both axes
+          // (vertical for extra rows, horizontal for extra columns) inside
+          // this box only.
+          <div className="min-h-0 flex-1 overflow-auto rounded-2xl border border-black/5 bg-white">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-black/5 text-xs uppercase tracking-wide text-[#1B2430]/45">
+              <thead className="sticky top-0 z-10 border-b border-black/5 bg-white text-xs uppercase tracking-wide text-[#1B2430]/45">
                 <tr>
                   <th className="px-4 py-3">File</th>
                   <th className="px-4 py-3">Project #</th>
@@ -251,7 +303,11 @@ export default function SubmissionsPage() {
               </div>
               <div>
                 <div className="text-[#1B2430]/50">Status</div>
-                <div className="capitalize">{selected.status}</div>
+                <span
+                  className={`mt-0.5 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${statusStyles[selected.status]}`}
+                >
+                  {selected.status}
+                </span>
               </div>
               <div>
                 <div className="text-[#1B2430]/50">Email</div>
@@ -289,27 +345,67 @@ export default function SubmissionsPage() {
               </div>
             </div>
 
-            <div>
-              <div className="mb-2 text-[#1B2430]/50">Editing Services</div>
-              <ul className="space-y-1.5">
-                {editingServices.map((item) => {
-                  const included = !selected.editingServices || selected.editingServices.includes(item.key);
-                  return (
-                    <li key={item.key} className="flex items-center gap-2">
-                      {included ? (
-                        <Check size={14} strokeWidth={2} className="shrink-0 text-green-600" />
-                      ) : (
-                        <X size={14} strokeWidth={2} className="shrink-0 text-red-500" />
-                      )}
-                      <span className={included ? "" : "text-[#1B2430]/40 line-through"}>{item.label}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            {(() => {
+              const included = editingServices.filter(
+                (item) => !selected.editingServices || selected.editingServices.includes(item.key)
+              );
+              return (
+                <div className="rounded-2xl border border-black/5 bg-[#FAFAF8] p-4">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold text-[#1B2430]">Editing Services</div>
+                      <div className="text-xs text-[#1B2430]/45">
+                        {included.length} of {editingServices.length} included
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => copyIncludedServices(selected)}
+                      disabled={included.length === 0}
+                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-40 ${
+                        copied
+                          ? "border-green-200 bg-green-50 text-green-700"
+                          : "border-black/10 bg-white text-[#1B2430] shadow-sm hover:border-[#C77D3D] hover:text-[#C77D3D] active:scale-95"
+                      }`}
+                    >
+                      {copied ? <Check size={13} strokeWidth={2.6} /> : <Copy size={13} strokeWidth={2} />}
+                      {copied ? "Copied" : "Copy included"}
+                    </button>
+                  </div>
+
+                  <ul className="space-y-1">
+                    {editingServices.map((item) => {
+                      const isIncluded = !selected.editingServices || selected.editingServices.includes(item.key);
+                      return (
+                        <li
+                          key={item.key}
+                          className={`flex items-start gap-2.5 rounded-lg px-2.5 py-1.5 ${
+                            isIncluded ? "bg-white shadow-sm shadow-black/[0.02]" : ""
+                          }`}
+                        >
+                          <span
+                            className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${
+                              isIncluded ? "bg-green-100 text-green-600" : "bg-black/5 text-[#1B2430]/30"
+                            }`}
+                          >
+                            {isIncluded ? <Check size={11} strokeWidth={3} /> : <X size={11} strokeWidth={3} />}
+                          </span>
+                          <span
+                            className={`text-sm leading-snug ${
+                              isIncluded ? "text-[#1B2430]" : "text-[#1B2430]/35 line-through"
+                            }`}
+                          >
+                            {item.label}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })()}
           </div>
         )}
       </Modal>
-    </>
+    </div>
   );
 }

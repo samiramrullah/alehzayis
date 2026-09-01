@@ -6,9 +6,9 @@ import SectionHeading from "@/components/submit/SectionHeading";
 import Corners from "@/components/submit/Corners";
 
 const steps = [
-  { icon: UploadCloud, title: "Upload", text: "Send us your manuscript — handwritten, typed, or scanned." },
-  { icon: Calculator, title: "Instant Quote", text: "See your word count and price the moment you upload." },
-  { icon: PenLine, title: "Expert Edit", text: "Our editors get to work, from a light proofread to a full rewrite." },
+  { icon: UploadCloud, title: "Upload Document", text: "Submit a typed manuscript and select your preferences." },
+  { icon: Calculator, title: "Instant Quote", text: "Receive your price based on selections and word count." },
+  { icon: PenLine, title: "Expert Editing", text: "Our coordinator will contact you to begin the editing process." },
 ];
 
 export default function HomePage() {
@@ -52,7 +52,7 @@ export default function HomePage() {
           <div className="mx-auto my-[24px] h-[2px] w-[58px] bg-[#C59B27]" />
 
           <p className="mx-auto mb-[36px] max-w-[540px] font-body text-[1.04rem] leading-[1.72] text-[#55474A]">
-            Upload your document, choose your editing level, and get an instant price — then let our editors take it from there.
+            Upload your document, choose your editing level, get an instant price, and let our editors take it from there.
           </p>
 
           <Link
@@ -70,7 +70,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="How It Works"
             title="Three Simple Steps"
-            description="From upload to expert edit, without the wait."
+            description="Expert editing, a few clicks away."
           />
 
           <div className="grid grid-cols-1 gap-[24px] sm:grid-cols-3">
@@ -93,7 +93,7 @@ export default function HomePage() {
 
       <section className="bg-[#F8F3EA] px-6 py-[80px] text-center sm:px-8 lg:px-10">
         <div className="mx-auto max-w-[520px]">
-          <SectionHeading eyebrow="Ready?" title="Get Your Instant Quote" description="It takes less than two minutes." />
+          <SectionHeading eyebrow="Ready?" title="Get Your Instant Quote" description="No login required." />
           <Link
             href="/submit"
             className="inline-flex h-[52px] items-center justify-center rounded-[2px] border border-[#4A1521] bg-[#4A1521] px-[36px] font-body text-[0.8rem] font-semibold uppercase tracking-[0.17em] text-[#FFF9EF] shadow-[0_8px_20px_rgba(74,21,33,0.14)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#310B13]"
