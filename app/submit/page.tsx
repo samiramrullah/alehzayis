@@ -293,8 +293,7 @@ export default function SubmitPage() {
 
   return (
     <main className="min-h-screen bg-[#FBF7EF]">
-      <nav className="flex items-center justify-between border-b border-[#4A1521]/10 px-6 py-[16px] sm:px-10">
-       <nav className="flex items-center justify-between px-6 py-6 sm:px-10">
+    <nav className="flex items-center justify-between px-6 py-6 sm:px-10">
         <Link href="/" className="flex items-center">
           <img
             src="/assets/mainwebsitelogo.png"
@@ -302,17 +301,12 @@ export default function SubmitPage() {
             className="h-[40px] w-auto object-contain sm:h-[48px]"
           />
         </Link>
-        {/* <a
+        <a
           href="https://alehzayis.com/"
           className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.17em] text-[#4A1521]/60 hover:text-[#4A1521]"
         >
           Main Website
-        </a> */}
-      </nav>
-        <div className="flex items-center gap-[9px] font-body text-[0.72rem] italic text-[#8B6816]">
-          <span className="text-[#C59B27]">◆</span>
-          Instant Editor
-        </div>
+        </a>
       </nav>
 
       <div className="mx-auto max-w-[1180px] px-6 py-[36px] sm:px-8 lg:px-10">
