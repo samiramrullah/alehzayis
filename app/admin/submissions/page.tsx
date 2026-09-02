@@ -179,9 +179,6 @@ export default function SubmissionsPage() {
   const visible = activeTab === "all" ? submissions : submissions.filter((s) => s.status === activeTab);
 
   return (
-    // h-full (not h-screen) because AdminLayout already pins the shell to
-    // the viewport; overflow-hidden + the flex-col below means only the
-    // table body scrolls, while the topbar and tabs stay put.
     <div className="flex h-full flex-col overflow-hidden">
       <Topbar title="Submissions" />
 
@@ -218,8 +215,7 @@ export default function SubmissionsPage() {
                 <tr>
                   <th className="px-4 py-3">File</th>
                   <th className="px-4 py-3">Project #</th>
-                  <th className="px-4 py-3">Email</th>
-                  <th className="px-4 py-3">Phone</th>
+                  
                   <th className="px-4 py-3">Language</th>
                   <th className="px-4 py-3">Service</th>
                   <th className="px-4 py-3">Words</th>
@@ -246,8 +242,7 @@ export default function SubmissionsPage() {
                         />
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-[#1B2430]/60">{s.email}</td>
-                    <td className="px-4 py-3 text-[#1B2430]/60">{s.phone || "—"}</td>
+                    
                     <td className="px-4 py-3 capitalize text-[#1B2430]/60">{s.language}</td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{serviceLabels[s.service]}</td>
                     <td className="px-4 py-3 text-[#1B2430]/60">{s.wordCount ? s.wordCount.toLocaleString() : "—"}</td>
