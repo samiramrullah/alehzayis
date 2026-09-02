@@ -28,7 +28,7 @@ const tabs = [
   { key: "new", label: "New" },
   { key: "reviewed", label: "Reviewed" },
   { key: "sent", label: "Sent" },
-  { key: "all", label: "Show All" },
+  { key: "all", label: "All" },
 ] as const;
 
 const serviceLabels: Record<string, string> = {
