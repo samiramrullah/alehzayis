@@ -7,6 +7,7 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import api from "@/components/lib/api";
 import { getStripe } from "@/components/lib/stripe";
 import ContactSection from "@/components/submit/ContactSection";
+import HelpContactSection from "@/components/ContactSection";
 
 type ServiceKey = "proofreading" | "midLevel" | "heavyEditing";
 type LanguageKey = "hebrew" | "english" | "yiddish";
@@ -585,7 +586,8 @@ export default function SubmitPage() {
         </div>
       </div>
 
-      <ContactSection />
+      {/* <ContactSection /> */}
+      <HelpContactSection/>
     </main>
   );
 }

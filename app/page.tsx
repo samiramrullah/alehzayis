@@ -4,6 +4,7 @@ import Link from "next/link";
 import { UploadCloud, Calculator, PenLine, ArrowRight } from "lucide-react";
 import SectionHeading from "@/components/submit/SectionHeading";
 import Corners from "@/components/submit/Corners";
+import HelpContactSection from "@/components/ContactSection";
 
 const steps = [
   { icon: UploadCloud, title: "Upload Document", text: "Submit a typed manuscript and select your preferences." },
@@ -15,7 +16,13 @@ export default function HomePage() {
   return (
     <main className="bg-[#FBF7EF]">
       <nav className="flex items-center justify-between px-6 py-6 sm:px-10">
-        <span className="font-display text-[1.1rem] tracking-[0.05em] text-[#4A1521]">Machon Aleh Zayis</span>
+        <Link href="/" className="flex items-center">
+          <img
+            src="/assets/mainwebsitelogo.png"
+            alt="Machon Aleh Zayis"
+            className="h-[40px] w-auto object-contain sm:h-[48px]"
+          />
+        </Link>
         <a
           href="https://alehzayis.com/"
           className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.17em] text-[#4A1521]/60 hover:text-[#4A1521]"
@@ -91,17 +98,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#F8F3EA] px-6 py-[80px] text-center sm:px-8 lg:px-10">
-        <div className="mx-auto max-w-[520px]">
-          <SectionHeading eyebrow="Ready?" title="Get Your Instant Quote" description="No login required." />
-          <Link
-            href="/submit"
-            className="inline-flex h-[52px] items-center justify-center rounded-[2px] border border-[#4A1521] bg-[#4A1521] px-[36px] font-body text-[0.8rem] font-semibold uppercase tracking-[0.17em] text-[#FFF9EF] shadow-[0_8px_20px_rgba(74,21,33,0.14)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#310B13]"
-          >
-            Start Now
-          </Link>
-        </div>
-      </section>
+      <HelpContactSection />
     </main>
   );
 }
