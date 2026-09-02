@@ -8,6 +8,7 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import api from "@/components/lib/api";
 import { getStripe } from "@/components/lib/stripe";
 import HelpContactSection from "@/components/ContactSection";
+import Navbar from "@/components/Navbar";
 
 type ServiceKey = "proofreading" | "midLevel" | "heavyEditing";
 type LanguageKey = "hebrew" | "english" | "yiddish";
@@ -293,21 +294,7 @@ export default function SubmitPage() {
 
   return (
     <main className="min-h-screen bg-[#FBF7EF]">
-    <nav className="flex items-center justify-between px-6 py-6 sm:px-10">
-        <Link href="/" className="flex items-center">
-          <img
-            src="/assets/mainwebsitelogo.png"
-            alt="Machon Aleh Zayis"
-            className="h-[40px] w-auto object-contain sm:h-[48px]"
-          />
-        </Link>
-        <a
-          href="https://alehzayis.com/"
-          className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.17em] text-[#4A1521]/60 hover:text-[#4A1521]"
-        >
-          Main Website
-        </a>
-      </nav>
+    <Navbar/>
 
       <div className="mx-auto max-w-[1180px] px-6 py-[36px] sm:px-8 lg:px-10">
         <div className="relative border border-[#C59B27]/55 bg-[#F8F3EA] p-[3px] shadow-[0_22px_45px_rgba(50,12,20,0.1)]">

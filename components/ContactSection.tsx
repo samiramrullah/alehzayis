@@ -45,10 +45,7 @@ export default function HelpContactSection({
   websiteHref = "https://alehzayis.com/",
   websiteDescription = "Visit our main website",
   logoSrc = "/assets/mainwebsitelogo.png",
-  email = "publish@alehzayis.com",
-  phone = "732.513.3466",
-  fax = "732.865.7002",
-  phone2 = "732.387.7841",
+
 }: HelpContactSectionProps) {
   return (
     <section className="relative overflow-hidden bg-[#F8F3EA] px-6 pb-[20px] pt-[96px] sm:px-8 lg:px-10">
@@ -71,21 +68,6 @@ export default function HelpContactSection({
       <div className="relative mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-[56px] lg:grid-cols-2 lg:gap-[80px]">
         <div className="text-center lg:text-left">
           <div className="mb-[18px] flex items-center justify-center gap-[11px] lg:justify-start">
-            <span className="h-px w-[28px] bg-[#C59B27]" />
-            <svg
-              aria-hidden="true"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#C59B27"
-              strokeWidth="1.6"
-              className="shrink-0"
-            >
-              <path d="M12 3 C 8 6, 8 10, 12 12 C 16 10, 16 6, 12 3 Z" />
-              <path d="M12 12 C 9 14, 6 14, 4 21 C 9 20, 11 17, 12 12 Z" />
-              <path d="M12 12 C 15 14, 18 14, 20 21 C 15 20, 13 17, 12 12 Z" />
-            </svg>
             <span className="font-body text-[0.76rem] font-semibold uppercase tracking-[0.27em] text-[#8B6816]">
               {eyebrow}
             </span>
