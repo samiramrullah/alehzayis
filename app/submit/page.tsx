@@ -6,7 +6,6 @@ import { UploadCloud, X, FileText, Check } from "lucide-react";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import api from "@/components/lib/api";
 import { getStripe } from "@/components/lib/stripe";
-import ContactSection from "@/components/submit/ContactSection";
 import HelpContactSection from "@/components/ContactSection";
 
 type ServiceKey = "proofreading" | "midLevel" | "heavyEditing";
