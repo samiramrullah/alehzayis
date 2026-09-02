@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { toast } from "sonner";
 import { UploadCloud, X, FileText, Check } from "lucide-react";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -9,6 +8,7 @@ import api from "@/components/lib/api";
 import { getStripe } from "@/components/lib/stripe";
 import HelpContactSection from "@/components/ContactSection";
 import Navbar from "@/components/Navbar";
+import SuccessSection from "@/components/submit/SuccessSection";
 
 type ServiceKey = "proofreading" | "midLevel" | "heavyEditing";
 type LanguageKey = "hebrew" | "english" | "yiddish";
@@ -273,22 +273,7 @@ export default function SubmitPage() {
 
   if (submitted) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#FBF7EF] px-6">
-        <div className="mx-auto max-w-[480px] text-center">
-          <div className="relative mx-auto mb-[24px] flex h-[68px] w-[68px] items-center justify-center rounded-full border border-[#C59B27]">
-            <Check size={26} strokeWidth={1.8} className="text-[#C59B27]" />
-          </div>
-          <div className="mb-[12px] flex items-center justify-center gap-[10px]">
-            <span className="h-px w-[22px] bg-[#C59B27]" />
-            <span className="font-body text-[0.74rem] font-semibold uppercase tracking-[0.25em] text-[#8B6816]">Complete</span>
-            <span className="h-px w-[22px] bg-[#C59B27]" />
-          </div>
-          <h2 className="font-display text-[2.2rem] font-normal text-[#3A101A]">Success</h2>
-          <p className="mx-auto mt-[16px] font-body text-[0.98rem] leading-[1.65] text-[#66575A]">
-            Thank you — your manuscript has been submitted and your payment received. Our editors will be in touch shortly to begin work.
-          </p>
-        </div>
-      </main>
+     <SuccessSection/>
     );
   }
 
@@ -358,12 +343,12 @@ export default function SubmitPage() {
                       </span>
                       <span className="font-body text-[0.8rem] leading-[1.5] text-[#3A101A]">{selectedLevel.bestFor}</span>
                     </div>
-                    <div className="flex gap-[8px]">
+                    {/* <div className="flex gap-[8px]">
                       <span className="shrink-0 font-body text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[#8B6816]">
                         Choose when
                       </span>
                       <span className="font-body text-[0.8rem] leading-[1.5] text-[#3A101A]">{selectedLevel.chooseWhen}</span>
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>
