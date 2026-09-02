@@ -368,7 +368,7 @@ export default function SubmissionsPage() {
                       }`}
                     >
                       {copied ? <Check size={13} strokeWidth={2.6} /> : <Copy size={13} strokeWidth={2} />}
-                      {copied ? "Copied" : "Copy included"}
+                      {copied ? "Copied" : "Copy"}
                     </button>
                   </div>
 

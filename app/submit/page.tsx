@@ -27,50 +27,54 @@ const ALL_SERVICES = [
 const levels: {
   key: ServiceKey;
   title: string;
+  subTitle: string;
   eyebrow: string;
   bestFor: string;
   chooseWhen: string;
   services: string[];
 }[] = [
-  {
-    key: "proofreading",
-    title: "Copyediting",
-    eyebrow: "Level 1",
-    bestFor: "A careful, final pass on polished writing.",
-    chooseWhen:
-      "Your manuscript is complete and has already been through developmental or language editing — you just need a final, careful check before it goes to print.",
-    services: ["grammar", "formatting", "hebrewTerms", "namesTerminology"],
-  },
-  {
-    key: "midLevel",
-    title: "Language Editing",
-    eyebrow: "Level 2",
-    bestFor: "Sharpens writing that already reads well.",
-    chooseWhen:
-      "Your manuscript is well-organized and the ideas are in place, but the prose itself — especially translated or bilingual text — needs to read more naturally and clearly.",
-    services: ["grammar", "formatting", "hebrewTerms", "namesTerminology", "naturalEnglish", "clarity"],
-  },
-  {
-    key: "heavyEditing",
-    title: "Substantive Editing",
-    eyebrow: "Level 3",
-    bestFor: "A full editorial partner for manuscripts still taking shape.",
-    chooseWhen:
-      "Your manuscript still needs structural work — reordering sections, tightening arguments, and closing gaps — in addition to line-level polish.",
-    services: [
-      "grammar",
-      "formatting",
-      "hebrewTerms",
-      "namesTerminology",
-      "naturalEnglish",
-      "clarity",
-      "organizeIdeas",
-      "reorganizeSections",
-      "removeRepetition",
-      "flagGaps",
-    ],
-  },
-];
+    {
+      key: "proofreading",
+      title: "Copy Editing",
+      subTitle: "Correct and Polish",
+      eyebrow: "Level 1",
+      bestFor: "Manuscripts that are well written and need a final review before publication.",
+      chooseWhen:
+        "Your manuscript is complete and has already been through developmental or language editing — you just need a final, careful check before it goes to print.",
+      services: ["grammar", "formatting", "hebrewTerms", "namesTerminology"],
+    },
+    {
+      key: "midLevel",
+      title: "Language Editing",
+      subTitle: "Refine the Language",
+      eyebrow: "Level 2",
+      bestFor: "Manuscripts with strong content that need clearer, more natural language.",
+      chooseWhen:
+        "Your manuscript is well-organized and the ideas are in place, but the prose itself — especially translated or bilingual text — needs to read more naturally and clearly.",
+      services: ["grammar", "formatting", "hebrewTerms", "namesTerminology", "naturalEnglish", "clarity"],
+    },
+    {
+      key: "heavyEditing",
+      title: "Substantive Editing",
+      subTitle: "Restructure and Clarify",
+      eyebrow: "Level 3",
+      bestFor: "Manuscripts that need improvement in structure, organization, and clarity.",
+      chooseWhen:
+        "Your manuscript still needs structural work — reordering sections, tightening arguments, and closing gaps — in addition to line-level polish.",
+      services: [
+        "grammar",
+        "formatting",
+        "hebrewTerms",
+        "namesTerminology",
+        "naturalEnglish",
+        "clarity",
+        "organizeIdeas",
+        "reorganizeSections",
+        "removeRepetition",
+        "flagGaps",
+      ],
+    },
+  ];
 
 const languages: { key: LanguageKey; label: string }[] = [
   { key: "hebrew", label: "Hebrew" },
@@ -317,11 +321,10 @@ export default function SubmitPage() {
                         key={item.key}
                         type="button"
                         onClick={() => setLevel(item.key)}
-                        className={`relative flex flex-col items-start gap-[6px] rounded-[3px] border px-[14px] py-[14px] text-left transition-all duration-200 ${
-                          isSelected
+                        className={`relative flex flex-col items-start gap-[6px] rounded-[3px] border px-[14px] py-[14px] text-left transition-all duration-200 ${isSelected
                             ? "border-[#4A1521] bg-[#4A1521] shadow-[0_10px_24px_rgba(74,21,33,0.18)]"
                             : "border-[#4A1521]/20 bg-[#FBF7EF] hover:border-[#C59B27] hover:bg-white"
-                        }`}
+                          }`}
                       >
                         {isSelected && (
                           <span className="absolute right-[10px] top-[10px] flex h-[16px] w-[16px] items-center justify-center rounded-full bg-[#C59B27]">
@@ -329,25 +332,22 @@ export default function SubmitPage() {
                           </span>
                         )}
                         <span
-                          className={`font-body text-[0.64rem] font-semibold uppercase tracking-[0.18em] ${
-                            isSelected ? "text-[#C59B27]" : "text-[#8B6816]"
-                          }`}
+                          className={`font-body text-[0.64rem] font-semibold uppercase tracking-[0.18em] ${isSelected ? "text-[#C59B27]" : "text-[#8B6816]"
+                            }`}
                         >
                           {item.eyebrow}
                         </span>
                         <span
-                          className={`font-display text-[1.05rem] font-normal leading-tight ${
-                            isSelected ? "text-[#FFF9EF]" : "text-[#3A101A]"
-                          }`}
+                          className={`font-display text-[1.05rem] font-normal leading-tight ${isSelected ? "text-[#FFF9EF]" : "text-[#3A101A]"
+                            }`}
                         >
                           {item.title}
                         </span>
                         <span
-                          className={`font-body text-[0.76rem] leading-[1.45] ${
-                            isSelected ? "text-[#FFF9EF]/75" : "text-[#8B7B7E]"
-                          }`}
+                          className={`font-body text-[0.76rem] leading-[1.45] ${isSelected ? "text-[#FFF9EF]/75" : "text-[#8B7B7E]"
+                            }`}
                         >
-                          {item.bestFor}
+                          {item.subTitle}
                         </span>
                       </button>
                     );
@@ -399,16 +399,14 @@ export default function SubmitPage() {
                             className="flex w-full items-center gap-[10px] rounded-[2px] border border-[#4A1521]/12 bg-white px-[12px] py-[9px] text-left transition-colors duration-200 hover:border-[#C59B27]/60"
                           >
                             <span
-                              className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${
-                                checked ? "border-[#4A1521] bg-[#4A1521]" : "border-[#4A1521]/25 bg-white"
-                              }`}
+                              className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${checked ? "border-[#4A1521] bg-[#4A1521]" : "border-[#4A1521]/25 bg-white"
+                                }`}
                             >
                               {checked && <Check size={11} strokeWidth={2.5} className="text-[#FFF9EF]" />}
                             </span>
                             <span
-                              className={`font-body text-[0.82rem] ${
-                                checked ? "text-[#3A101A]" : "text-[#8B7B7E] line-through"
-                              }`}
+                              className={`font-body text-[0.82rem] ${checked ? "text-[#3A101A]" : "text-[#8B7B7E] line-through"
+                                }`}
                             >
                               {item.label}
                             </span>
@@ -432,11 +430,10 @@ export default function SubmitPage() {
                         key={lang.key}
                         type="button"
                         onClick={() => setLanguage(lang.key)}
-                        className={`flex h-[44px] items-center justify-center rounded-[2px] border font-body text-[0.85rem] font-medium transition-all duration-200 ${
-                          isSelected
+                        className={`flex h-[44px] items-center justify-center rounded-[2px] border font-body text-[0.85rem] font-medium transition-all duration-200 ${isSelected
                             ? "border-[#4A1521] bg-[#4A1521] text-[#FFF9EF]"
                             : "border-[#4A1521]/20 bg-[#FBF7EF] text-[#4A1521] hover:border-[#4A1521]/50"
-                        }`}
+                          }`}
                       >
                         {lang.label}
                       </button>
