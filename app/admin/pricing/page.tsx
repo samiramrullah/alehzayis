@@ -58,14 +58,18 @@ export default function PricingPage() {
 
       <div className="max-w-2xl space-y-6 p-8">
         {LANGUAGES.map((language) => (
-          <div key={language.key} className="rounded-2xl border border-black/5 bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-[#1B2430]">{language.label}</h2>
+          <div key={language.key} className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+            <h2 className="mb-5 text-lg font-semibold tracking-tight text-[#1B2430]">{language.label}</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               {TIERS.map((tier) => (
                 <div key={tier.key}>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-[#1B2430]/60">
-                    <span className="block">{tier.title}</span>
-                    <span className="block">{tier.subtitle}</span>
+                  <label className="mb-1.5 block">
+                    <span className="block text-[13px] font-semibold uppercase tracking-wide text-[#1B2430]">
+                      {tier.title}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] font-medium uppercase tracking-wide text-[#1B2430]/45">
+                      {tier.subtitle}
+                    </span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1B2430]/40">$</span>
@@ -75,7 +79,7 @@ export default function PricingPage() {
                       min="0"
                       value={pricing[language.key][tier.key]}
                       onChange={(e) => updateRate(language.key, tier.key, e.target.value)}
-                      className="h-11 w-full rounded-xl border border-black/10 bg-white pl-7 pr-3 text-sm outline-none focus:border-[#C77D3D]"
+                      className="h-11 w-full rounded-xl border border-black/10 bg-white pl-7 pr-3 text-sm outline-none transition-shadow focus:border-[#C77D3D] focus:ring-2 focus:ring-[#C77D3D]/15"
                     />
                   </div>
                 </div>
