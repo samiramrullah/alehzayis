@@ -15,19 +15,25 @@ const LANGUAGES: { key: keyof Pricing; label: string }[] = [
 ];
 
 const TIERS: { key: keyof Rates; title: string; subtitle: string }[] = [
-  { key: "heavyEditing", title: "Level 1", subtitle: "Copy Editing" },
+  { key: "heavyEditing", title: "Level 1", subtitle: "Substantive Editing" },
   { key: "midLevel", title: "Level 2", subtitle: "Language Editing" },
-  { key: "proofreading", title: "Level 3", subtitle: "Substantive Editing" },
+  { key: "proofreading", title: "Level 3", subtitle: "Copy Editing " },
 ];
+
+const MIN_RATE = 0.1;
 
 export default function PricingPage() {
   const [pricing, setPricing] = useState<Pricing | null>(null);
   const [saving, setSaving] = useState(false);
+  const [displayVersion, setDisplayVersion] = useState(0);
 
   useEffect(() => {
     api
       .get("/api/pricing")
-      .then((res) => setPricing(res.data.data))
+      .then((res) => {
+        setPricing(res.data.data);
+        setDisplayVersion((v) => v + 1);
+      })
       .catch(() => toast.error("Unable to load pricing"));
   }, []);
 
@@ -36,12 +42,20 @@ export default function PricingPage() {
     setPricing({ ...pricing, [lang]: { ...pricing[lang], [tier]: Number(value) } });
   };
 
+  const clampRate = (lang: keyof Pricing, tier: keyof Rates, input: HTMLInputElement) => {
+    const parsed = Number(input.value);
+    const clamped = Number.isFinite(parsed) && parsed >= MIN_RATE ? parsed : MIN_RATE;
+    input.value = clamped.toFixed(2);
+    setPricing((prev) => (prev ? { ...prev, [lang]: { ...prev[lang], [tier]: clamped } } : prev));
+  };
+
   const save = async () => {
     if (!pricing) return;
     setSaving(true);
     try {
       const response = await api.patch("/api/pricing", pricing);
       setPricing(response.data.data);
+      setDisplayVersion((v) => v + 1);
       toast.success("Pricing updated");
     } catch {
       toast.error("Unable to update pricing");
@@ -53,10 +67,10 @@ export default function PricingPage() {
   if (!pricing) return null;
 
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <Topbar title="Pricing" />
 
-      <div className="max-w-2xl space-y-6 p-8">
+      <div className="max-w-2xl flex-1 space-y-6 overflow-y-auto p-8">
         {LANGUAGES.map((language) => (
           <div key={language.key} className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
             <h2 className="mb-5 text-lg font-semibold tracking-tight text-[#1B2430]">{language.label}</h2>
@@ -74,11 +88,13 @@ export default function PricingPage() {
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1B2430]/40">$</span>
                     <input
+                      key={`${language.key}-${tier.key}-${displayVersion}`}
                       type="number"
                       step="0.01"
-                      min="0"
-                      value={pricing[language.key][tier.key]}
+                      min={MIN_RATE}
+                      defaultValue={pricing[language.key][tier.key].toFixed(2)}
                       onChange={(e) => updateRate(language.key, tier.key, e.target.value)}
+                      onBlur={(e) => clampRate(language.key, tier.key, e.target)}
                       className="h-11 w-full rounded-xl border border-black/10 bg-white pl-7 pr-3 text-sm outline-none transition-shadow focus:border-[#C77D3D] focus:ring-2 focus:ring-[#C77D3D]/15"
                     />
                   </div>
@@ -96,6 +112,6 @@ export default function PricingPage() {
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </div>
-    </>
+    </div>
   );
 }
