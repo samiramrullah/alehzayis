@@ -16,9 +16,9 @@ const LANGUAGES: { key: keyof Pricing; label: string }[] = [
 ];
 
 const TIERS: { key: keyof Rates; title: string; subtitle: string }[] = [
-  { key: "heavyEditing", title: "Level 1", subtitle: "Copy Editing" },
+  { key: "proofreading", title: "Level 1", subtitle: "Copy Editing" },
   { key: "midLevel", title: "Level 2", subtitle: "Language Editing" },
-  { key: "proofreading", title: "Level 3", subtitle: "Substantive Editing" },
+  { key: "heavyEditing", title: "Level 3", subtitle: "Substantive Editing" },
 ];
 
 const MIN_RATE = 0;
