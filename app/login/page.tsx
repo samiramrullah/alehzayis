@@ -41,7 +41,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex items-center justify-center gap-2">
           <FileText size={20} className="text-[#C77D3D]" />
-          <span className="text-sm font-semibold tracking-[0.15em] uppercase text-[#1B2430]">Quoteline</span>
+          <span className="text-sm font-semibold tracking-[0.15em] uppercase text-[#1B2430]">ALEH ZAYIS</span>
         </div>
 
         <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.06)] sm:p-7">

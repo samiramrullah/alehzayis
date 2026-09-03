@@ -28,7 +28,7 @@ const tabs = [
   { key: "new", label: "New" },
   { key: "reviewed", label: "Reviewed" },
   { key: "sent", label: "Sent" },
-  { key: "all", label: "All" },
+  { key: "all", label: "Show All" },
 ] as const;
 
 const serviceLabels: Record<string, string> = {
@@ -251,9 +251,9 @@ export default function SubmissionsPage() {
         ) : visible.length === 0 ? (
           <p className="text-sm text-[#1B2430]/55">No submissions here.</p>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-black/5 bg-white">
+          <div className="max-h-[65vh] overflow-auto rounded-2xl border border-black/5 bg-white">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-black/5 text-xs uppercase tracking-wide text-[#1B2430]/45">
+              <thead className="sticky top-0 z-10 border-b border-black/5 bg-white text-xs uppercase tracking-wide text-[#1B2430]/45">
                 <tr>
                   <th className="px-4 py-3">File</th>
                   <th className="px-4 py-3">Project #</th>
