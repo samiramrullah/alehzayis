@@ -11,6 +11,7 @@ const Navbar = () => {
                 />
             </Link>
             <a
+             target="ALEHZAYIS"
                 href="https://alehzayis.com/"
                 className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.17em] text-[#4A1521]/60 hover:text-[#4A1521]"
             >
