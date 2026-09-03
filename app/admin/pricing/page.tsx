@@ -213,10 +213,11 @@ export default function PricingPage() {
   if (!pricing) return null;
 
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <Topbar title="Pricing" />
 
-      <div className="max-w-2xl space-y-6 p-8">
+      <div className="flex-1 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="max-w-2xl space-y-6 p-8">
         {LANGUAGES.map((language) => (
           <div key={language.key} className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
             <h2 className="mb-5 text-lg font-semibold tracking-tight text-[#1B2430]">{language.label}</h2>
@@ -278,7 +279,8 @@ export default function PricingPage() {
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
