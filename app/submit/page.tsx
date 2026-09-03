@@ -273,13 +273,13 @@ export default function SubmitPage() {
 
   if (submitted) {
     return (
-     <SuccessSection/>
+      <SuccessSection />
     );
   }
 
   return (
     <main className="min-h-screen bg-[#FBF7EF]">
-    <Navbar/>
+      <Navbar />
 
       <div className="mx-auto max-w-[1180px] px-6 py-[36px] sm:px-8 lg:px-10">
         <div className="relative border border-[#C59B27]/55 bg-[#F8F3EA] p-[3px] shadow-[0_22px_45px_rgba(50,12,20,0.1)]">
@@ -337,13 +337,13 @@ export default function SubmitPage() {
 
                 {selectedLevel && (
                   <div className="mt-[12px] space-y-[8px] rounded-[2px] border border-[#C59B27]/30 bg-[#FBF7EF] px-[14px] py-[12px]">
-                    <div className="flex gap-[8px]">
+                    <div className="flex items-start gap-[8px]">
                       <span className="shrink-0 font-body text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[#8B6816]">
                         Best for
                       </span>
                       <span className="font-body text-[0.8rem] leading-[1.5] text-[#3A101A]">{selectedLevel.bestFor}</span>
                     </div>
-                    {/* <div className="flex gap-[8px]">
+                    {/* <div className="flex items-start gap-[8px]">
                       <span className="shrink-0 font-body text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[#8B6816]">
                         Choose when
                       </span>
@@ -566,8 +566,7 @@ export default function SubmitPage() {
         </div>
       </div>
 
-      {/* <ContactSection /> */}
-      <HelpContactSection/>
+      <HelpContactSection />
     </main>
   );
 }
