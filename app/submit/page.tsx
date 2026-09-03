@@ -343,12 +343,7 @@ export default function SubmitPage() {
                       </span>
                       <span className="font-body text-[0.8rem] leading-[1.5] text-[#3A101A]">{selectedLevel.bestFor}</span>
                     </div>
-                    {/* <div className="flex items-start gap-[8px]">
-                      <span className="shrink-0 font-body text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[#8B6816]">
-                        Choose when
-                      </span>
-                      <span className="font-body text-[0.8rem] leading-[1.5] text-[#3A101A]">{selectedLevel.chooseWhen}</span>
-                    </div> */}
+                    
                   </div>
                 )}
               </div>
@@ -507,7 +502,7 @@ export default function SubmitPage() {
                 {!calculating && quote && (
                   <div>
                     <div className="mb-[8px] font-body text-[0.8rem] text-[#66575A]">
-                      ${quote.ratePerWord.toFixed(3)}/word · {quote.wordCount.toLocaleString()} words
+                      ${quote.ratePerWord.toFixed(2)}/word · {quote.wordCount.toLocaleString()} words
                     </div>
                     <div className="font-display text-[2.3rem] font-normal text-[#4A1521]">
                       ${quote.estimatedCost.toFixed(2)}
