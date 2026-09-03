@@ -338,7 +338,7 @@ export default function SubmitPage() {
                 {selectedLevel && (
                   <div className="mt-[12px] space-y-[8px] rounded-[2px] border border-[#C59B27]/30 bg-[#FBF7EF] px-[14px] py-[12px]">
                     <div className="flex items-start gap-[8px]">
-                      <span className="shrink-0 pt-0.5 font-body text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[#8B6816]">
+                      <span className="shrink-0 font-body text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[#8B6816]">
                         Best for
                       </span>
                       <span className="font-body text-[0.8rem] leading-[1.5] text-[#3A101A]">{selectedLevel.bestFor}</span>

@@ -10,10 +10,10 @@ export default function Sidebar() {
 
   return (
     <aside className="flex h-screen w-60 flex-col bg-[#1B2430] text-[#FAF7F1]">
-      <div className="flex items-center gap-2 px-6 py-6">
+      <Link  href="/"className="flex items-center gap-2 px-6 py-6">
         <FileText size={18} className="text-[#C77D3D]" />
         <span className="text-sm font-semibold tracking-[0.15em] uppercase">ALEH ZAYIS</span>
-      </div>
+      </Link>
 
       <nav className="flex-1 space-y-1 px-3">
         {navItems.map((item) => {
